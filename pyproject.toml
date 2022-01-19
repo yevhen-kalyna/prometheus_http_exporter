@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "prometheus_http_exporter"
+version = "0.1.0"
+description = "Prometheus exporter for gathering NGINX ingress endpoints by regex and check their status code using http path"
+authors = ["Yevhen Kalyna <e.kalina.work@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.27.1"
+kubernetes = "^21.7.0"
+prometheus-client = "^0.12.0"
+confuse = "^1.7.0"
+loguru = "^0.5.3"
+pydantic = "^1.9.0"
+
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^1.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
