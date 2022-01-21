@@ -3,6 +3,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "prometheus-http-exporter.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "prometheus-http-exporter.labels" . | nindent 4 }}
 spec:
