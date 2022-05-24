@@ -1,5 +1,6 @@
 from time import sleep
 from typing import Any, List, Optional
+from urllib.error import URLError
 import requests
 from prometheus_client import start_http_server, Gauge, push_to_gateway, REGISTRY
 from loguru import logger
@@ -107,6 +108,8 @@ def validate_target(gauge_metric: Gauge, target: Target, configuration: Configur
         try:
             responce = requests.get(target_url, verify=not target.insecure_skip_verify,
                                     allow_redirects=target.follow_redirects, timeout=target.timeout)
+        except requests.exceptions.ReadTimeout:
+            logger.warning(f"Request timeout for {target_url}")
         except Exception as e:
             logger.error(
                 f"Error occure on get request to target url {target_url}")
@@ -115,8 +118,15 @@ def validate_target(gauge_metric: Gauge, target: Target, configuration: Configur
         gauge_metric.labels(target_url, target.pattern,
                             target.path).set(responce.status_code)
         if configuration.push_gateway.registry:
-            push_to_gateway(configuration.push_gateway.address,
-                            job=configuration.push_gateway.job, registry=configuration.push_gateway.registry)
+            try:
+                push_to_gateway(configuration.push_gateway.address,
+                                job=configuration.push_gateway.job, registry=configuration.push_gateway.registry)
+            except URLError:
+                logger.error("Can\'t connect to pushgateway!")
+                logger.exception(e)
+                exit(1)
+            except Exception as e:
+                logger.exception(e)
 
 @logger.catch
 def main():

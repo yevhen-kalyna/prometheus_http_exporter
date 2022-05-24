@@ -1,4 +1,4 @@
-FROM python:3.9.6-slim-buster
+FROM python:3.9
 
 RUN pip install poetry==1.1.8
 
