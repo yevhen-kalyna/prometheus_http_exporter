@@ -8,7 +8,7 @@ image:
   repository: yevhenkalyna/prometheus_http_exporter
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.1"
+  tag: "0.1.2"
 
 # Prometheus HTTP Exporter configuration file.
 config:

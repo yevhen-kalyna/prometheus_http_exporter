@@ -111,9 +111,8 @@ def validate_target(gauge_metric: Gauge, target: Target, configuration: Configur
         except requests.exceptions.ReadTimeout:
             logger.warning(f"Request timeout for {target_url}")
         except Exception as e:
-            logger.error(
-                f"Error occure on get request to target url {target_url}")
-            logger.exception(e)
+            logger.warning(
+                f"Error '{type(e).__name__}' occure on get request to target url {target_url}")
 
         gauge_metric.labels(target_url, target.pattern,
                             target.path).set(responce.status_code)
@@ -121,7 +120,7 @@ def validate_target(gauge_metric: Gauge, target: Target, configuration: Configur
             try:
                 push_to_gateway(configuration.push_gateway.address,
                                 job=configuration.push_gateway.job, registry=configuration.push_gateway.registry)
-            except URLError:
+            except URLError as e:
                 logger.error("Can\'t connect to pushgateway!")
                 logger.exception(e)
                 exit(1)
