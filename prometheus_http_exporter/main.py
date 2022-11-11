@@ -121,9 +121,7 @@ def validate_target(gauge_metric: Gauge, target: Target, configuration: Configur
                 push_to_gateway(configuration.push_gateway.address,
                                 job=configuration.push_gateway.job, registry=configuration.push_gateway.registry)
             except URLError as e:
-                logger.error("Can\'t connect to pushgateway!")
-                logger.exception(e)
-                exit(1)
+                logger.error("Pushgateway refused connection")
             except Exception as e:
                 logger.exception(e)
 
